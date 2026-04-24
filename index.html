@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODEWARTS — School of Algorithms & Wizardry</title>
+  <meta name="description" content="Master AI algorithms through enchanted puzzle gameplay at Codewarts — the Hogwarts of Computer Science." />
+  <meta name="theme-color" content="#0a0812" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     ANIMATED BACKGROUND CANVAS
+═══════════════════════════════════════════════ -->
+<canvas id="bgCanvas"></canvas>
+<div class="mist">
+  <div class="mist-layer"></div>
+  <div class="mist-layer"></div>
+  <div class="mist-layer"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     NOTIFICATION TOAST
+═══════════════════════════════════════════════ -->
+<div id="notif"></div>
+
+<!-- ═══════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    ⚡ CODEWARTS
+    <span>School of Algorithms &amp; Wizardry</span>
+  </div>
+
+  <div class="nav-links">
+    <a onclick="showPage('home')"       id="nav-home"       class="active">Great Hall</a>
+    <a onclick="showPage('games')"      id="nav-games">Spellbook</a>
+    <a onclick="showPage('algorithms')" id="nav-algorithms">Ancient Runes</a>
+    <a onclick="showPage('about')"      id="nav-about">About</a>
+    <a onclick="showPage('contact')"    id="nav-contact">Owlery</a>
+    <a onclick="showPage(APP.user ? 'dashboard' : 'login')" id="nav-dash">Common Room</a>
+  </div>
+
+  <div class="nav-right">
+    <div class="db-status"><div class="db-dot"></div>DB Live</div>
+    <span id="nav-user-name" style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;color:var(--gold);display:none"></span>
+    <button class="btn-primary" style="padding:.42rem 1rem;font-size:.7rem"
+            onclick="APP.user ? logout() : showPage('login')"
+            id="nav-auth-btn">Enter</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE WRAPPER
+═══════════════════════════════════════════════ -->
+<div class="page-wrap">
+
+<!-- ══════════════════════════
+     HOME PAGE
+══════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-crest">⚡</div>
+    <div class="hero-badge">✦ Codewarts School of Algorithms &amp; Wizardry ✦</div>
+    <h1>CODEWARTS</h1>
+    <p class="hero-subtitle">Master the dark arts of AI — Dijkstra, A*, BFS, Minimax — through enchanted puzzles and a living database.</p>
+    <div class="hero-latin">Draco Dormiens Nunquam Titillandus · Learn · Code · Conquer</div>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('games')">✦ Open the Spellbook</button>
+      <button class="btn-ghost"   onclick="showPage('algorithms')">📜 Ancient Runes</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="hs-users">0</div><div class="lbl">Enrolled Wizards</div></div>
+      <div class="hero-stat"><div class="num">8+</div><div class="lbl">Enchanted Puzzles</div></div>
+      <div class="hero-stat"><div class="num">6</div><div class="lbl">AI Spells</div></div>
+      <div class="hero-stat"><div class="num" id="hs-games">0</div><div class="lbl">Spells Cast</div></div>
+    </div>
+  </div>
+
+  <!-- Houses -->
+  <div class="sep-dark">
+    <div class="section section-inner">
+      <div class="section-tag">The Four Houses of Algorithm</div>
+      <div class="section-title">Choose Your House</div>
+      <div class="houses-row">
+        <div class="house-card" onclick="launchGame('bfs')">
+          <div class="house-emblem">🦁</div>
+          <div class="house-name">Gryffindor BFS</div>
+          <div class="house-trait">Brave — explores level by level</div>
+        </div>
+        <div class="house-card" onclick="launchGame('dfs')">
+          <div class="house-emblem">🦅</div>
+          <div class="house-name">Ravenclaw DFS</div>
+          <div class="house-trait">Wise — dives deep before retreating</div>
+        </div>
+        <div class="house-card" onclick="launchGame('astar')">
+          <div class="house-emblem">🐍</div>
+          <div class="house-name">Slytherin A*</div>
+          <div class="house-trait">Cunning — uses heuristics to win</div>
+        </div>
+        <div class="house-card" onclick="launchGame('dijkstra')">
+          <div class="house-emblem">🦡</div>
+          <div class="house-name">Hufflepuff Dijkstra</div>
+          <div class="house-trait">Steadfast — guarantees optimal paths</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="section">
+    <div class="scroll-ornament">✦ · · · ✦</div>
+    <div class="section-tag">Platform Magic</div>
+    <div class="section-title">Why Codewarts Works</div>
+    <div class="feature-list">
+      <div class="feature-item"><div class="feat-icon">🧙</div><div class="feat-text"><h4>Play &amp; Conjure</h4><p>Solve puzzles manually, then watch AI cast the optimal solution beside you.</p></div></div>
+      <div class="feature-item"><div class="feat-icon">💾</div><div class="feat-text"><h4>Living Database</h4><p>Every wizard account and spell result is stored in a real persistent database — green DB indicator confirms it.</p></div></div>
+      <div class="feature-item"><div class="feat-icon">🎬</div><div class="feat-text"><h4>Algorithm Visualization</h4><p>Watch BFS, DFS, Dijkstra, A* explore step-by-step with animated enchantments.</p></div></div>
+      <div class="feature-item"><div class="feat-icon">🪣</div><div class="feat-text"><h4>Water Jug Levels</h4><p>Easy, Medium, and Hard cauldron challenges — new random problems every session.</p></div></div>
+      <div class="feature-item"><div class="feat-icon">🔮</div><div class="feat-text"><h4>Solvable Prophecies Only</h4><p>Every map is validated before display — never face an unwinnable enchantment.</p></div></div>
+      <div class="feature-item"><div class="feat-icon">📊</div><div class="feat-text"><h4>Performance Divination</h4><p>Track efficiency, compare with optimal solutions, view growth in your Common Room.</p></div></div>
+    </div>
+  </div>
+
+  <!-- Featured Puzzles -->
+  <div class="sep-dark">
+    <div class="section section-inner">
+      <div class="section-tag">Enchanted Puzzles</div>
+      <div class="section-title">Featured Spells</div>
+      <div class="puzzle-grid" id="home-puzzle-grid"></div>
+      <div style="text-align:center;margin-top:2rem">
+        <button class="btn-ghost" onclick="showPage('games')">View All Spells →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <div class="scroll-ornament">✦ · · · ✦</div>
+    <div class="section-tag">Scroll of Questions</div>
+    <div class="section-title">Frequently Asked Mysteries</div>
+    <div style="margin-top:1.5rem">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Must I be a wizard to learn here? <span class="faq-arrow">▼</span></div><div class="faq-a">Not at all! Learn algorithms visually through gameplay — no programming experience needed.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my account actually saved to a database? <span class="faq-arrow">▼</span></div><div class="faq-a">Yes! When you sign up, your profile is saved to Codewarts' persistent database (localStorage-backed). The green "DB Live" indicator confirms the connection. All game results are saved per session.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does the Water Jug difficulty system work? <span class="faq-arrow">▼</span></div><div class="faq-a">Easy: 2 jugs with small capacities. Medium: 3 cauldrons or larger sizes. Hard: complex multi-jug dark arts challenges — and a brand new problem generates every time you play!</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Which AI algorithms will I master? <span class="faq-arrow">▼</span></div><div class="faq-a">BFS, DFS, Dijkstra, A* Search, Backtracking, and Minimax — all visualized through interactive enchanted puzzles.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I use Codewarts in an academic course? <span class="faq-arrow">▼</span></div><div class="faq-a">Absolutely. Codewarts maps to standard AI/CS curriculum. Each puzzle teaches a specific algorithm concept with visual feedback and performance analytics.</div></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-banner">
+    <div class="scroll-ornament">⚡ · · · ⚡</div>
+    <h2>Enroll at Codewarts</h2>
+    <p>Your acceptance letter has arrived. The Sorting Hat awaits.</p>
+    <div class="cta-btns">
+      <button class="btn-primary" onclick="showPage('signup')">✦ Receive Your Letter</button>
+      <button class="btn-ghost"   onclick="showPage('games')">Explore Without Enrolling</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">⚡ CODEWARTS</div>
+        <div class="footer-tagline">School of Algorithms &amp; Wizardry</div>
+        <p class="footer-desc">Where ancient algorithms meet modern magic. Interactive AI learning for wizards and developers worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Classrooms</h4>
+        <a onclick="showPage('games')">Spellbook</a>
+        <a onclick="showPage('algorithms')">Ancient Runes</a>
+        <a onclick="showPage('about')">About the School</a>
+      </div>
+      <div class="footer-col">
+        <h4>Enrollment</h4>
+        <a onclick="showPage('signup')">Get Your Letter</a>
+        <a onclick="showPage('login')">Enter the Castle</a>
+        <a onclick="showPage('dashboard')">Common Room</a>
+      </div>
+      <div class="footer-col">
+        <h4>Scrolls</h4>
+        <a onclick="showPage('privacy')">Privacy Parchment</a>
+        <a onclick="showPage('terms')">Terms of Magic</a>
+        <a onclick="showPage('contact')">The Owlery</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Codewarts · School of Algorithms &amp; Wizardry</span>
+      <span>Crafted with enchantment 🌍</span>
+    </div>
+  </footer>
+</div><!-- /page-home -->
+
+
+<!-- ══════════════════════════
+     GAMES LIBRARY
+══════════════════════════ -->
+<div class="page" id="page-games">
+  <div class="section">
+    <div class="scroll-ornament">✦ · · · ✦</div>
+    <div class="section-tag">The Enchanted Spellbook</div>
+    <div class="section-title">All Puzzle Spells</div>
+    <div class="section-sub">Choose your enchantment. Each puzzle teaches a spell of the algorithmic arts.</div>
+    <div class="puzzle-grid" id="all-puzzle-grid"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     ALGORITHMS PAGE
+══════════════════════════ -->
+<div class="page" id="page-algorithms">
+  <div class="section">
+    <div class="scroll-ornament">✦ · · · ✦</div>
+    <div class="section-tag">Ancient Runes of Computation</div>
+    <div class="section-title">AI Algorithms Decoded</div>
+    <div class="algo-cards">
+      <div class="algo-card">
+        <div class="algo-icon">🌊</div><h3>Breadth-First Search</h3>
+        <p>Explores the realm layer by layer. Guarantees shortest path in unweighted graphs via a sacred queue.</p>
+        <div><span class="algo-pill">Queue</span><span class="algo-pill">Shortest Path</span><span class="algo-pill">Unweighted</span></div>
+        <button class="btn-primary sm" style="margin-top:.65rem" onclick="launchGame('bfs')">Cast BFS Spell →</button>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon">🔍</div><h3>Depth-First Search</h3>
+        <p>Ventures deep before retreating. Uses stack/recursion like a Gryffindor dungeon explorer.</p>
+        <div><span class="algo-pill">Stack</span><span class="algo-pill">Backtracking</span><span class="algo-pill">Graph</span></div>
+        <button class="btn-primary sm" style="margin-top:.65rem" onclick="launchGame('dfs')">Cast DFS Spell →</button>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon">🗺️</div><h3>Dijkstra's Algorithm</h3>
+        <p>Finds shortest weighted path from source. Foundation of all modern GPS navigation enchantments.</p>
+        <div><span class="algo-pill">Priority Queue</span><span class="algo-pill">Weighted</span><span class="algo-pill">Greedy</span></div>
+        <button class="btn-primary sm" style="margin-top:.65rem" onclick="launchGame('dijkstra')">Cast Dijkstra →</button>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon">⭐</div><h3>A* Heuristic Search</h3>
+        <p>f(n)=g(n)+h(n). Combines Dijkstra's precision with a prophetic heuristic for blazing speed.</p>
+        <div><span class="algo-pill">Heuristic</span><span class="algo-pill">Optimal</span><span class="algo-pill">Fast</span></div>
+        <button class="btn-primary sm" style="margin-top:.65rem" onclick="launchGame('astar')">Cast A* Spell →</button>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon">↩️</div><h3>Backtracking Conjuration</h3>
+        <p>Builds solutions stone by stone, abandoning cursed paths that violate the ancient constraint scroll.</p>
+        <div><span class="algo-pill">Constraint</span><span class="algo-pill">Recursive</span><span class="algo-pill">Search</span></div>
+        <button class="btn-primary sm" style="margin-top:.65rem" onclick="launchGame('sudoku')">Solve Sudoku →</button>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon">🎭</div><h3>Minimax Dueling</h3>
+        <p>Adversarial sorcery for two-wizard duels. Maximizing player seeks glory; minimizer denies it.</p>
+        <div><span class="algo-pill">Game Tree</span><span class="algo-pill">Adversarial</span><span class="algo-pill">Optimal</span></div>
+        <button class="btn-primary sm" style="margin-top:.65rem" onclick="launchGame('tictactoe')">Duel the AI →</button>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon">🪣</div><h3>BFS State Search</h3>
+        <p>Water Jug explores all reachable (a,b,c…) states via BFS until the exact target is measured.</p>
+        <div><span class="algo-pill">State Space</span><span class="algo-pill">BFS</span><span class="algo-pill">Multi-level</span></div>
+        <button class="btn-primary sm" style="margin-top:.65rem" onclick="launchGame('waterjug')">Brew a Potion →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     INDIVIDUAL GAME PAGE
+══════════════════════════ -->
+<div class="page" id="page-game">
+  <div class="game-container">
+    <!-- Header with ← back and × close -->
+    <div class="game-header">
+      <button class="back-btn" onclick="showPage('games')">← Spellbook</button>
+      <div class="game-header-title">
+        <h2 id="game-title"></h2>
+        <p id="game-subtitle"></p>
+      </div>
+      <!-- ✕ — returns to Ancient Runes algorithms page -->
+      <button class="close-game-btn" onclick="showPage('algorithms')" title="Back to Ancient Runes">✕</button>
+    </div>
+
+    <div class="game-body">
+      <!-- Board -->
+      <div class="game-board-area">
+        <div id="game-instruction" class="game-instruction"></div>
+        <div id="game-canvas"></div>
+        <div class="game-controls" id="game-controls"></div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="game-sidebar">
+        <div class="sidebar-card">
+          <div class="timer-big" id="timer-display">0.0s</div>
+          <div class="stat-row"><span class="stat-label">Moves</span><span class="stat-val" id="moves-count">0</span></div>
+          <div class="stat-row"><span class="stat-label">Nodes Explored</span><span class="stat-val" id="nodes-count">0</span></div>
+          <div class="stat-row"><span class="stat-label">Status</span><span class="stat-val" id="game-status" style="font-size:.75rem;color:var(--text2)">Casting...</span></div>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>AI Solve Mode</h3>
+          <p style="font-size:.74rem;color:var(--text3);margin-bottom:.62rem;font-style:italic">Summon the AI to solve this enchantment</p>
+          <div class="algo-btns" id="algo-selector"></div>
+          <button class="ctrl-btn primary" style="width:100%;margin-top:.62rem"
+                  onclick="runAISolve()" id="ai-solve-btn">✦ Summon AI</button>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>Legend</h3>
+          <div class="legend-grid">
+            <div class="legend-item"><div class="legend-dot" style="background:#2a8a2a"></div>Start</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Goal</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#0c0910"></div>Wall</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--crimson)"></div>Your Path</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#4a1a7a"></div>Visited</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>AI Path</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     DASHBOARD
+══════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:.75rem">
+      <div>
+        <div class="section-tag">The Common Room</div>
+        <div class="section-title" id="dash-welcome">Welcome, Wizard!</div>
+      </div>
+      <div style="display:flex;gap:.65rem;align-items:center">
+        <div class="db-status"><div class="db-dot"></div>Synced to DB</div>
+        <button class="btn-ghost sm" onclick="showPage('games')">✦ Cast a Spell</button>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-stat"><div class="ds-num" id="ds-total">0</div><div class="ds-label">Spells Cast</div><div class="ds-change">↑ Keep going!</div></div>
+      <div class="dash-stat"><div class="ds-num" id="ds-best">—</div><div class="ds-label">Best Efficiency</div><div class="ds-change">↑ Aim for 100%</div></div>
+      <div class="dash-stat"><div class="ds-num" id="ds-avg">0s</div><div class="ds-label">Avg Casting Time</div></div>
+      <div class="dash-stat"><div class="ds-num" id="ds-streak">0</div><div class="ds-label">Day Streak</div><div class="ds-change">🔥 Stay magical</div></div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-top:.85rem">
+      <h3 style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;color:var(--gold);margin-bottom:.38rem;text-transform:uppercase;letter-spacing:.07em">Spell Power Over Time</h3>
+      <div class="mini-chart" id="perf-chart"></div>
+      <div style="font-size:.7rem;color:var(--text3);margin-top:.38rem;font-style:italic;font-family:'Cinzel',serif">Efficiency per spell cast (last 10)</div>
+    </div>
+
+    <h3 style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;color:var(--gold);margin-top:1.75rem;margin-bottom:.38rem;text-transform:uppercase;letter-spacing:.07em">Hall of Records</h3>
+    <table class="history-table">
+      <thead>
+        <tr><th>Spell</th><th>Algorithm</th><th>Level</th><th>Time</th><th>Efficiency</th><th>Date</th></tr>
+      </thead>
+      <tbody id="history-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     LOGIN
+══════════════════════════ -->
+<div class="page" id="page-login">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="crest">🏰</div>
+      <h2>Enter the Castle</h2>
+      <p class="tagline">Speak the incantation to access your Common Room.</p>
+      <div class="form-group">
+        <label>Wizard Email</label>
+        <input type="email" id="login-email" placeholder="wizard@codewarts.edu" />
+      </div>
+      <div class="form-group">
+        <label>Secret Incantation</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="handleLogin()">✦ Cast Alohomora</button>
+      <div class="auth-hint">Demo: demo@codewarts.com / demo123</div>
+      <div class="auth-footer">Not yet enrolled? <span onclick="showPage('signup')">Receive Your Letter</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     SIGNUP
+══════════════════════════ -->
+<div class="page" id="page-signup">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="crest">🦉</div>
+      <h2>Receive Your Letter</h2>
+      <p class="tagline">You have been accepted to Codewarts School of Algorithms.</p>
+      <div class="form-group">
+        <label>Wizard Name</label>
+        <input type="text" id="signup-name" placeholder="Harry Codesworth" />
+      </div>
+      <div class="form-group">
+        <label>Wizard Email</label>
+        <input type="email" id="signup-email" placeholder="you@codewarts.edu" />
+      </div>
+      <div class="form-group">
+        <label>House (Optional)</label>
+        <select id="signup-house">
+          <option value="">— Select Your House —</option>
+          <option value="Gryffindor">🦁 Gryffindor (BFS)</option>
+          <option value="Ravenclaw">🦅 Ravenclaw (DFS)</option>
+          <option value="Slytherin">🐍 Slytherin (A*)</option>
+          <option value="Hufflepuff">🦡 Hufflepuff (Dijkstra)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Secret Incantation</label>
+        <input type="password" id="signup-password" placeholder="Min. 6 characters" />
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="handleSignup()">✦ Enroll at Codewarts</button>
+      <div class="db-save-indicator" id="db-indicator">💾 Saving to Codewarts Database...</div>
+      <div class="auth-footer">Already enrolled? <span onclick="showPage('login')">Enter the Castle</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     ABOUT
+══════════════════════════ -->
+<div class="page" id="page-about">
+  <div class="section" style="max-width:900px">
+    <div class="scroll-ornament">✦ · · · ✦</div>
+    <div class="section-tag">About the School</div>
+    <div class="section-title">Codewarts Academy</div>
+    <div class="section-sub">Where ancient algorithmic wisdom meets modern interactive sorcery.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;margin-top:2.5rem">
+      <div>
+        <h3 style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--gold3);margin-bottom:.88rem">Our Founding Spell</h3>
+        <p style="color:var(--text2);line-height:1.9;margin-bottom:.88rem;font-style:italic">Abstract algorithms become powerful magic when you cast them yourself. The only way to truly understand BFS is to watch it explore a labyrinth cell by cell.</p>
+        <p style="color:var(--text2);line-height:1.9;font-style:italic">Every wizard account is stored in our living database. Your progress persists, your growth is recorded, your legacy grows.</p>
+      </div>
+      <div class="about-highlight">
+        <div style="font-size:1.75rem;margin-bottom:.75rem">🎓</div>
+        <h4 style="font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;color:var(--gold2);margin-bottom:.62rem">Admitted Students Include</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:.4rem">
+          <li style="font-size:.85rem;color:var(--text2)">✦ CS &amp; Engineering Students</li>
+          <li style="font-size:.85rem;color:var(--text2)">✦ AI/ML Bootcamp Apprentices</li>
+          <li style="font-size:.85rem;color:var(--text2)">✦ Interview Quest Seekers</li>
+          <li style="font-size:.85rem;color:var(--text2)">✦ Academic Instructors</li>
+          <li style="font-size:.85rem;color:var(--text2)">✦ Self-taught Wizard Developers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     CONTACT / OWLERY
+══════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="section">
+    <div class="scroll-ornament">✦ · · · ✦</div>
+    <div class="section-tag">The Owlery</div>
+    <div class="section-title">Send an Owl</div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Your message shall be received</h3>
+        <p>Questions about the enchanted platform, a feature request, or want to use Codewarts in your Academy? Reply within 24 hours.</p>
+        <div class="contact-item">🦉 <span>owls@codewarts.io</span></div>
+        <div class="contact-item">🏰 <span>Codewarts Academy, Scotland</span></div>
+        <div class="contact-item">💾 <span>All messages stored in our database</span></div>
+      </div>
+      <div class="contact-form">
+        <div class="form-group"><label>Your Name</label><input type="text" id="contact-name" placeholder="Harry Codesworth" /></div>
+        <div class="form-group"><label>Return Address</label><input type="email" id="contact-email" placeholder="you@codewarts.edu" /></div>
+        <div class="form-group"><label>Subject</label><input type="text" id="contact-subject" placeholder="Request / Bug / Question" /></div>
+        <div class="form-group"><label>Message</label><textarea id="contact-msg" placeholder="Inscribe your message on this enchanted parchment..."></textarea></div>
+        <button class="btn-primary" style="width:100%" onclick="submitContact()">🦉 Dispatch Owl</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     PRIVACY
+══════════════════════════ -->
+<div class="page" id="page-privacy">
+  <div class="section" style="max-width:780px">
+    <div class="section-tag">Sacred Scrolls</div>
+    <div class="section-title">Privacy Parchment</div>
+    <div class="legal-body">
+      <p><strong>Data We Store:</strong> Wizard name, email, house, and gameplay stats — saved securely in our enchanted database.</p>
+      <p><strong>Data Use:</strong> Solely for your learning analytics. We do not sell data to Muggles or third parties.</p>
+      <p><strong>Cookies:</strong> We use session cookies for authentication and local storage for anonymous gameplay data.</p>
+      <p><strong>Obliviate Request:</strong> Request full deletion of your wizard record at any time via the Owlery.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     TERMS
+══════════════════════════ -->
+<div class="page" id="page-terms">
+  <div class="section" style="max-width:780px">
+    <div class="section-tag">Sacred Scrolls</div>
+    <div class="section-title">Terms of Magic</div>
+    <div class="legal-body">
+      <p><strong>Permitted Sorcery:</strong> For educational enchantment — personal study, academic conjuring, and teaching young witches and wizards.</p>
+      <p><strong>Your Wizard Account:</strong> You are responsible for maintaining the secrecy of your incantation credentials.</p>
+      <p><strong>Intellectual Scrolls:</strong> All puzzle enchantments and visualizations are property of Codewarts Academy.</p>
+      <p><strong>Disclaimer Charm:</strong> Provided as-is for educational sorcery. No warranties on continuous availability.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     RESULT MODAL  (shown on game win)
+═══════════════════════════════════════════════ -->
+<div id="result-modal" style="display:none">
+  <div class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal">
+      <!-- ✕ top-right → back to Ancient Runes -->
+      <button class="modal-close-x" onclick="closeModal(); showPage('algorithms')" title="Back to Ancient Runes">✕</button>
+
+      <h2 id="modal-title">⚡ Spell Complete!</h2>
+
+      <div class="result-grid">
+        <div class="result-card"><div class="r-val" id="r-time">—</div><div class="r-lbl">Casting Time</div></div>
+        <div class="result-card"><div class="r-val" id="r-moves">—</div><div class="r-lbl">Your Moves</div></div>
+        <div class="result-card"><div class="r-val" id="r-optimal">—</div><div class="r-lbl">Optimal Moves</div></div>
+        <div class="result-card"><div class="r-val" id="r-eff">—</div><div class="r-lbl">Spell Power</div></div>
+      </div>
+
+      <div style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:.62rem;color:var(--text3);margin-bottom:.35rem;letter-spacing:.06em;text-transform:uppercase">
+          <span>Spell Efficiency</span><span id="r-eff-pct">—</span>
+        </div>
+        <div class="efficiency-bar"><div class="efficiency-fill" id="r-eff-bar" style="width:0%"></div></div>
+      </div>
+
+      <div class="r-feedback" id="r-feedback"></div>
+
+      <div class="modal-btns">
+        <button class="btn-ghost sm" onclick="closeModal(); showPage('algorithms')">✕ Back to Runes</button>
+        <button class="btn-primary sm" onclick="newMap()">🔄 New Enchantment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page-wrap -->
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS  (order matters: DB → App → Background)
+═══════════════════════════════════════════════ -->
+<script src="database.js"></script>
+<script src="app.js"></script>
+<script src="background.js"></script>
+
+</body>
+</html>
